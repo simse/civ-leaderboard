@@ -36,5 +36,8 @@
 		"google-spreadsheet": "^4.1.4",
 		"node-cache": "^5.1.2",
 		"ts-trueskill": "^5.1.0"
+	},
+	"engines": {
+		"node": "22.9.0"
 	}
 }
