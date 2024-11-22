@@ -6,21 +6,18 @@ interface CacheMetadata {
     timestamp: string;
 }
 
-const getGamesCached = async (kv?: KVNamespace): Promise<{
+let cache: Game[] | null = null;
+let cahceTimestamp: string | null = null;
+
+const getGamesCached = async (): Promise<{
     games: Game[];
     cacheTimestamp: string;
 }> => {
     // load games from Google Sheets
-    if (kv) {
-        const cacheContent = await kv.getWithMetadata<Game[], CacheMetadata>("games_from_google_sheets", "json")
-
-        // console.log(cacheContent)
-
-        if (cacheContent.value !== null) {
-            return {
-                games: cacheContent.value,
-                cacheTimestamp: cacheContent.metadata?.timestamp || 'uhhhh not sure lol',
-            }
+    if (cache !== null) {
+        return {
+            games: cache,
+            cacheTimestamp: cahceTimestamp || 'uhhhh not sure lol',
         }
     }
 
@@ -29,14 +26,8 @@ const getGamesCached = async (kv?: KVNamespace): Promise<{
         timestamp: new Date().toLocaleString(),
     }
 
-
-    // save to cache
-    if (kv) {
-        await kv.put("games_from_google_sheets", JSON.stringify(games), {
-            metadata,
-        })
-
-    }
+    cache = games;
+    cahceTimestamp = metadata.timestamp;
 
     return {
         games,
@@ -44,8 +35,8 @@ const getGamesCached = async (kv?: KVNamespace): Promise<{
     }
 };
 
-export const load: PageServerLoad = async ({ platform }) => {
-    const { games, cacheTimestamp } = await getGamesCached(platform?.env?.KV)
+export const load: PageServerLoad = async ({ }) => {
+    const { games, cacheTimestamp } = await getGamesCached()
     
     
     const rankings = await getRankings(games);

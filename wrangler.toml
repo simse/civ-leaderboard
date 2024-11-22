@@ -1,7 +1,0 @@
-name = "civ-leaderboard"
-compatibility_date = "2024-11-16"
-
-kv_namespaces = [
-  { binding = "KV", id = "8615c1a08ea347d0bd87577db3c1a45e", preview_id="8615c1a08ea347d0bd87577db3c1a45e" }
-]
-
