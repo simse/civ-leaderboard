@@ -37,6 +37,8 @@ const getGamesCached = async (): Promise<{
 
 export const load: PageServerLoad = async ({ }) => {
     const { games, cacheTimestamp } = await getGamesCached()
+
+    console.log(games, cacheTimestamp)
     
     
     const rankings = await getRankings(games);
