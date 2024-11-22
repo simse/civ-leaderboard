@@ -38,6 +38,6 @@
 		"ts-trueskill": "^5.1.0"
 	},
 	"engines": {
-		"node": "22.9.0"
+		"node": "22"
 	}
 }
