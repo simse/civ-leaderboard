@@ -37,6 +37,16 @@
             logo: '/leaders/Sundiata_Keita_(Civ6).webp',
             borderColour: 'border-yellow-500',
             textColour: 'text-yellow-200'
+        },
+        'Hungary': {
+            logo: '/leaders/Matthias_Corvinus_(Civ6).webp',
+            borderColour: 'border-green-700',
+            textColour: 'text-orange-400',
+        },
+        'China (Wu Zetian)': {
+            logo: '/leaders/Wu_Zetian_(Civ6).webp',
+            borderColour: 'border-red-700',
+            textColour: 'text-yellow-300',
         }
     }
 

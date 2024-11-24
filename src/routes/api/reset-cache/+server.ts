@@ -1,8 +1,8 @@
-import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { clearGamesCache } from '$lib/sheets';
 
-export const GET: RequestHandler = async ({ platform }) => {
-	await platform?.env?.KV.delete("games_from_google_sheets");
+export const GET: RequestHandler = async ({ }) => {
+	clearGamesCache();
 
 	return new Response('OK');
 };

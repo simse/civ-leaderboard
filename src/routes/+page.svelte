@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { invalidateAll } from '$app/navigation';
+	  import { invalidateAll } from '$app/navigation';
     import type { PageData } from './$types';
     import CivBadge from '../components/CivBadge.svelte';
-	import Methodology from '../components/Methodology.svelte';
+	  import Methodology from '../components/Methodology.svelte';
 
     let { data }: { data: PageData } = $props();
     const rankings = $derived(data.rankings.rankings);
@@ -12,6 +12,7 @@
     let showRankDiffDetails = $state<{
         [key: string]: boolean;
     }>({})
+    let showRankDetails = $state(false)
 
     const resetCache = async () => {
         reloadDataButtonLabel = 'Reloading...';
@@ -35,12 +36,15 @@
 
 <main class=" max-w-3xl mx-auto ">
     <section class="mb-16">
-        <table class="w-fit min-w-64 border border-zinc-700 bg-zinc-900">
+        <table class="min-w-96 border border-zinc-700 bg-zinc-900">
             <thead class="font-bold">
                 <tr class="">
                     <td class="p-2 pl-4">#</td>
                     <td class="p-2">Player</td>
-                    <td class="text-right pr-4 p-2">MMR</td>
+                    <td
+                      class="text-right pr-4 p-2 underline hover:cursor-pointer"
+                      onclick={() => {showRankDetails = !showRankDetails}}
+                    >MMR</td>
                 </tr>
             </thead>
 
@@ -49,7 +53,16 @@
                 <tr class="hover:bg-yellow-100/10 odd:bg-zinc-800">
                     <td class="pl-4 text-lg w-12 text-zinc-400">{index + 1}</td>
                     <td class="py-2 text-lg ">{ranking.player}</td>
-                    <td class="text-right font-bold text-lg pr-4">{ranking.ranking}</td>
+                    <td class="text-right pr-4 py-2">
+                        <p class="font-bold text-lg ">{ranking.ranking}</p>
+
+                        {#if showRankDetails}
+                        <ul class="text-zinc-300 text-sm">
+                            <li>Base Skill (μ): {round(ranking.baseSkill)}</li>
+                            <li>Skill Uncertainty (σ): {round(ranking.skillUncertainty)}</li>
+                        </ul>
+                        {/if}
+                    </td>
                 </tr>
                 {/each}
             </tbody>

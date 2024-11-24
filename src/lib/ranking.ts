@@ -1,10 +1,12 @@
 import { Rating, TrueSkill } from 'ts-trueskill';
-import type { Game, Player } from './sheets';
+import type { Game, Player } from '$lib/types';
 
 interface Ranking {
     player: string;
     ranking: number;
     gamesPlayed: number;
+    baseSkill: number;
+    skillUncertainty: number;
 }
 
 interface Placement {
@@ -30,6 +32,8 @@ interface GameResult {
     placements: Placement[];
 }
 
+const AI_PLAYER_RATING = new Rating(5, 1)
+
 const trueSkill = new TrueSkill(25, 8.333333333333334, 4.166666666666667, 0.08333333333333334, 0)
 
 export const round = (num: number): number => {
@@ -52,7 +56,7 @@ const calculateWeightedRank = (
     // Score bonus: up to 10% better rank for scores above 1000
     // No penalty for scores below 1000
     const scoreBonus = score > 1000 
-        ? Math.min((score - 1000) / 1000, 0.20) // Cap at 10% bonus
+        ? Math.min((score - 1000) / 1000 * 0.2, 0.20)
         : 0;
     
     // Playtime penalty (15% per 1000 hours)
@@ -100,7 +104,7 @@ export const getRankings = (games: Game[]): {
         // Add any new players to rankings
         for (const player of players) {
             if (!playerRankings.has(player.name)) {
-                playerRankings.set(player.name, new Rating());
+                playerRankings.set(player.name, player.ai ? AI_PLAYER_RATING : new Rating());
             }
             if (!playerGamesPlayed.has(player.name)) {
                 playerGamesPlayed.set(player.name, 0);
@@ -179,6 +183,8 @@ export const getRankings = (games: Game[]): {
             player: playerName,
             gamesPlayed: gamesPlayed,
             ranking: ratingToElo(ranking),
+            baseSkill: ranking?.mu || 0,
+            skillUncertainty: ranking?.sigma || 0,
         };
     });
 
